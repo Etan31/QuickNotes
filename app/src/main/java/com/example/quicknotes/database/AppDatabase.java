@@ -1,10 +1,13 @@
 package com.example.quicknotes.database;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.RoomSQLiteQuery;
+import androidx.sqlite.db.SupportSQLiteStatement;
 
 import com.example.quicknotes.PasswordDao;
 import com.example.quicknotes.PasswordEntity;

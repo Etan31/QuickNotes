@@ -166,7 +166,8 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Rate the application on the Play Store
-                rateApp();
+//                rateApp();
+                showCreatePasswordUI();
             }
         });
 
@@ -204,7 +205,9 @@ public class SettingFragment extends Fragment {
                     // Example: showEnterPasswordDialog();
                     Toast.makeText(requireContext(), "1Password", Toast.LENGTH_SHORT).show();
 //                    showEnterPasswordUI(savedPassword);
-                    Log.d("Save", "clickedqwe");
+                    Log.d("password", "You have password set.");
+                    Log.d("popup", "popup_lock is displayed");
+                    showEnterPasswordUI(savedPassword);
                 });
             } else {
                 // No password saved, show create password UI or handle accordingly
@@ -212,7 +215,8 @@ public class SettingFragment extends Fragment {
                     // Show UI to create password
                     // Example: showCreatePasswordDialog();
                     showCreatePasswordUI();
-                    Log.d("Save", "clickwqeqeed");
+                    Log.d("password", "You don't have password set.");
+                    Log.d("popup", "popup_createpassword is displayed");
 
 
                 });
@@ -225,57 +229,45 @@ public class SettingFragment extends Fragment {
         return view;
     }
 
-//    private void showEnterPasswordUI(PasswordEntity savedPassword) {
-//        // Set the fragment layout for entering password
-//        View enterPasswordView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_lock, null);
-//
-//        EditText passwordEditText = enterPasswordView.findViewById(R.id.retypepass);
-//        Button submitButton = enterPasswordView.findViewById(R.id.SubmitBtn);
-//
-//        submitButton.setOnClickListener(v -> {
-//            String enteredPassword = passwordEditText.getText().toString();
-//            if (enteredPassword.equals(savedPassword.getPassword())) {
-//                // Password is correct, handle accordingly
-//                // For example, navigate to the main activity
-//                Toast.makeText(requireContext(), "Correct Password", Toast.LENGTH_SHORT).show();
-//
-//            } else {
-//                // Password is incorrect, show an error message
-//                Toast.makeText(requireContext(), "Incorrect Password", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+    private void showEnterPasswordUI(PasswordEntity savedPassword) {
+        // Set the fragment layout for entering password
+        View enterPasswordView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_lock, null);
+        EnterPasswordDialogFragment dialogFragment = new EnterPasswordDialogFragment(savedPassword);
+        dialogFragment.show(getChildFragmentManager(), "EnterPasswordDialogFragment");
+        Log.d("showEnterPasswordUI", "clicked functions yessss");
+    }
 
-    private View showCreatePasswordUI() {
+    private void showCreatePasswordUI() {
         Log.d("Savjojghke", "showCreatePasswordUI called");
 
-        // Set the fragment layout for creating password
-        View createPasswordView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_createpassword, null);
-
-        // Set the visibility of the container to visible
-        getView().findViewById(R.id.password_popup_container).setVisibility(View.VISIBLE);
+        // Create an instance of your PasswordFragment
+        PasswordFragment passwordFragment = new PasswordFragment();
 
         // Use a transaction to add the PasswordFragment to the container
         getParentFragmentManager().beginTransaction()
-                .replace(R.id.password_popup_container, new PasswordFragment())
+                .replace(R.id.password_popup_container, passwordFragment) // Use the existing instance
                 .addToBackStack(null)
                 .commit();
 
-        // Set the content view of the fragment to createPasswordView
-        // This assumes that the fragment is using createPasswordView as its main view
-        // If you have other views in the fragment layout, make sure they are included
-        // in createPasswordView and set as the fragment's view.
-        // For example, if createPasswordView is your fragment's main view, you can set it as follows:
-        // return createPasswordView;
+        // Set the visibility of the container to visible
+        getView().findViewById(R.id.password_popup_container).setVisibility(View.VISIBLE);
+    }
 
-        // Set the click listener for the Submit button directly within this method
+
+
+
+
+
+    private void clicked() {
+        Log.d("SavesasdASF", "click");
+
+        View createPasswordView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_createpassword, null);
         EditText passwordEditText = createPasswordView.findViewById(R.id.typepass);
         EditText retypePasswordEditText = createPasswordView.findViewById(R.id.retypepass);
         Button submitButton = createPasswordView.findViewById(R.id.SubmitBtn);
 
         submitButton.setOnClickListener(v -> {
-            Log.d("Save", "Submit button clicked");
-            Log.d("Save", "Hello from click listener"); // Add this line
+            Log.d("Savesss", "Clicked button");
 
             String password = passwordEditText.getText().toString();
             String retypePassword = retypePasswordEditText.getText().toString();
@@ -292,56 +284,17 @@ public class SettingFragment extends Fragment {
             // Passwords match, save the password
             AppDatabase.getInstance(requireContext()).passwordDao().savePassword(new PasswordEntity(password));
 
+            // Log the Submit button click
+            Log.d("Save", "Submit button clicked");
+
             // Handle accordingly (e.g., navigate to the main activity)
 
             // Optional: Close the fragment or hide the container
             getView().findViewById(R.id.password_popup_container).setVisibility(View.GONE);
+
+            // Rest of the code...
         });
-
-        // Set the content view of the fragment to createPasswordView
-        return createPasswordView;
     }
-
-
-
-
-//    private void clicked() {
-//        Log.d("SavesasdASF", "click");
-//
-//        View createPasswordView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_createpassword, null);
-//        EditText passwordEditText = createPasswordView.findViewById(R.id.typepass);
-//        EditText retypePasswordEditText = createPasswordView.findViewById(R.id.retypepass);
-//        Button submitButton = createPasswordView.findViewById(R.id.SubmitBtn);
-//
-//        submitButton.setOnClickListener(v -> {
-//            Log.d("Savesss", "Clicked button");
-//
-//            String password = passwordEditText.getText().toString();
-//            String retypePassword = retypePasswordEditText.getText().toString();
-//            Log.d("Save", "clicked");
-//            Log.d("Save", password);
-//            Log.d("Save", retypePassword);
-//
-//            if (!password.equals(retypePassword)) {
-//                // Passwords do not match, show an error message
-//                Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
-//                return; // Return to avoid saving incorrect password
-//            }
-//
-//            // Passwords match, save the password
-//            AppDatabase.getInstance(requireContext()).passwordDao().savePassword(new PasswordEntity(password));
-//
-//            // Log the Submit button click
-//            Log.d("Save", "Submit button clicked");
-//
-//            // Handle accordingly (e.g., navigate to the main activity)
-//
-//            // Optional: Close the fragment or hide the container
-//            getView().findViewById(R.id.password_popup_container).setVisibility(View.GONE);
-//
-//            // Rest of the code...
-//        });
-//    }
 
 
 
