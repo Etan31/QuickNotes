@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#52C0E9</color>
+    <color name="colorSecondary">#E9FF92</color>
+    <color name="colorLine">#B9B8B8</color>
+    <color name="backBtn">#545454</color>
+    <color name="colorTextHint">#7B7B7B</color>
+    <color name="colorContainer">#E9E9E9</color>
+    <color name="colorIcons">#A4A4A4</color>
+    <color name="colorHome">#F1F2ED</color>
+    <color name="colorTextSubtitle">#CECECE</color>
+    <color name="colorSearch">#D9D9D9</color>
+    <color name="colorNoteSubtitleText">#FAFAFA</color>
+    <color name="colorMiscellaneousBackground">#1F1F1F</color>
+    <color name="colorAccent">#FDBE3B</color>
+    <color name="colorContainer2">#CCCE65</color>
+    <color name="colorSetting">#F1F2ED</color>
+    <color name="colorNote2">#FDBE3B</color>
+    <color name="colorNote3">#FF4842</color>
+    <color name="colorNote4">#3A52Fc</color>
+    <color name="colorNote5">#CCCE65</color>
+    <color name="colorDelete">#FF4842</color>
+    <color name="colorSearchIcon">#DBDBDB</color>
+    <color name="colorDefaultNoteColor">#333333</color>
+</resources>

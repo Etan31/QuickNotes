@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.quicknotes.HomeFragment"
+        android:label="Home Fragment"
+        tools:layout="@layout/fragment_home">
+        <!-- Specify additional fragment details here -->
+    </fragment>
+    <fragment
+        android:id="@+id/nav_lockNotes"
+        android:name="com.example.quicknotes.LockedFragment"
+        android:label="Locked Fragment"
+        tools:layout="@layout/fragment_locked">
+        <!-- Specify additional fragment details here -->
+    </fragment>
+    <fragment
+        android:id="@+id/nav_recycleBin"
+        android:name="com.example.quicknotes.RecycleBinFragment"
+        android:label="Recycle Fragment"
+        tools:layout="@layout/fragment_recycle_bin">
+        <!-- Specify additional fragment details here -->
+    </fragment>
+    <fragment
+        android:id="@+id/nav_setting"
+        android:name="com.example.quicknotes.SettingFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_setting" />
+    <!-- Define other fragments and navigation paths as needed -->
+
+</navigation>

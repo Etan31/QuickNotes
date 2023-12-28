@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:textAlignment="textStart"
+    tools:context=".LockedFragment">
+
+    <LinearLayout
+        android:id="@+id/layoutSearch"
+        android:layout_width="@dimen/_280sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="60dp"
+        android:background="@drawable/search_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/_10sdp"
+        android:paddingEnd="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.051">
+
+        <ImageView
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_search"
+            app:tint="@color/black" />
+
+
+        <EditText
+            android:id="@+id/inputSearch"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:background="@null"
+            android:fontFamily="@font/montserrat_semibold"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:includeFontPadding="false"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="@dimen/_13ssp" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/LockednotesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingStart="0dp"
+        android:paddingEnd="@dimen/_12sdp"
+        android:paddingBottom="@dimen/_12sdp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutSearch"
+        tools:layout_editor_absoluteX="3dp" />
+
+
+
+<!--    <View-->
+<!--        android:id="@+id/note1"-->
+<!--        android:layout_width="152dp"-->
+<!--        android:layout_height="172dp"-->
+<!--        android:background="@drawable/container"-->
+<!--        android:backgroundTint="@color/colorSearch"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.1"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.196" />-->
+
+<!--    <View-->
+<!--        android:id="@+id/note2"-->
+<!--        android:layout_width="152dp"-->
+<!--        android:layout_height="172dp"-->
+<!--        android:background="@drawable/container"-->
+<!--        android:backgroundTint="@color/purple_200"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.849"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.196" />-->
+
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView12"-->
+<!--        android:layout_width="44dp"-->
+<!--        android:layout_height="52dp"-->
+<!--        android:src="@drawable/lock2"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/note1"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/note1"-->
+<!--        app:layout_constraintHorizontal_bias="0.49"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/note1"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/note1"-->
+<!--        app:layout_constraintVertical_bias="0.391" />-->
+
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView14"-->
+<!--        android:layout_width="44dp"-->
+<!--        android:layout_height="52dp"-->
+<!--        android:layout_marginTop="3dp"-->
+<!--        android:src="@drawable/lock2"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/note2"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/note2"-->
+<!--        app:layout_constraintHorizontal_bias="0.481"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/note2"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/note2"-->
+<!--        app:layout_constraintVertical_bias="0.391" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/Lock_lbl"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:fontFamily="@font/montserrat_semibold"-->
+<!--        android:text="Passwords"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="20sp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/note1"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/note1"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/note1"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/imageView12" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:fontFamily="@font/montserrat_semibold"-->
+<!--        android:shadowColor="@color/black"-->
+<!--        android:text="Secrets"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="20sp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/note2"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/note2"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/note2"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/imageView14" />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
