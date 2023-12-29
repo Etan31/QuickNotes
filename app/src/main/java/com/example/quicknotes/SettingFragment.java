@@ -99,29 +99,7 @@ public class SettingFragment extends Fragment {
         return null;
     }
 
-//    @Override
-//    protected void onPostExecute(PasswordEntity savedPassword) {
-//        SettingFragment fragment = fragmentWeakReference.get();
-//        Button changeResetPasswordButton = changeResetPasswordButtonWeakReference.get();
-//
-//        if (fragment != null && changeResetPasswordButton != null) {
-//            if (savedPassword != null) {
-//                // Password is saved, show enter password UI or handle accordingly
-//                changeResetPasswordButton.setOnClickListener(v -> {
-//                    // Show UI to enter password
-//                    Toast.makeText(fragment.requireContext(), "1Password", Toast.LENGTH_SHORT).show();
-////                    fragment.showEnterPasswordUI(savedPassword);
-//                });
-//            } else {
-//                // No password saved, show create password UI or handle accordingly
-//                changeResetPasswordButton.setOnClickListener(v -> {
-//                    // Show UI to create password
-//                    fragment.showCreatePasswordUI();
-//                    Toast.makeText(fragment.requireContext(), "1Prwerwassword", Toast.LENGTH_SHORT).show();
-//                });
-//            }
-//        }
-//    }
+
 }
 
 
@@ -172,29 +150,7 @@ public class SettingFragment extends Fragment {
         });
 
 
-        //clicked for change/reset Password
-//        Button changeResetPasswordButton  =view.findViewById(R.id.change_resetPass);
-//        PasswordEntity savedPassword = AppDatabase.getInstance(requireContext()).passwordDao().getPassword();
 
-//        if (savedPassword != null) {
-//            // Password is saved, show enter password UI or handle accordingly
-//            changeResetPasswordButton.setOnClickListener(v -> {
-//                // Show UI to enter password
-//                // You can use a Dialog, start a new activity, or replace the fragment, etc.
-//                // Example: showEnterPasswordDialog();
-//                Toast.makeText(requireContext(), "11Password", Toast.LENGTH_SHORT).show();
-//                showEnterPasswordUI(savedPassword);
-//            });
-//        } else {
-//            // No password saved, show create password UI or handle accordingly
-//            changeResetPasswordButton.setOnClickListener(v -> {
-//                // Show UI to create password
-//                // You can use a Dialog, start a new activity, or replace the fragment, etc.
-//                // Example: showCreatePasswordDialog();
-//                Toast.makeText(requireContext(), "21Password", Toast.LENGTH_SHORT).show();
-//                showCreatePasswordUI();
-//            });
-//        }
 
         PasswordViewModel passwordViewModel = new ViewModelProvider(this).get(PasswordViewModel.class);
         passwordViewModel.getPasswordLiveData().observe(getViewLifecycleOwner(), savedPassword -> {

@@ -9,7 +9,7 @@ import androidx.room.Query;
 @Dao
 public interface PasswordDao {
 
-    @Query("SELECT * FROM passwords LIMIT 1")
+    @Query("SELECT * FROM passwords LIMIT 3")
     PasswordEntity getPassword();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
