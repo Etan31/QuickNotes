@@ -148,9 +148,7 @@ private static class PasswordAsyncTask extends AsyncTask<Void, Void, List<Passwo
             @Override
             public void onClick(View v) {
                 // Share the application
-//                shareApp();
-
-                showCreatePasswordUI();
+                shareApp();
             }
         });
 
