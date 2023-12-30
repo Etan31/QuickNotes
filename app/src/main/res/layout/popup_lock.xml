@@ -55,6 +55,18 @@
             android:textColorHint="#3E3A3A" />
 
         <Button
+            android:id="@+id/backBtn"
+            android:layout_width="38dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="18dp"
+            android:text="X"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
             android:id="@+id/SubmitBtn"
             android:layout_width="106dp"
             android:layout_height="wrap_content"
@@ -68,21 +80,10 @@
             android:gravity="center"
             android:text="Submit" />
 
-        <ImageView
-            android:id="@+id/close_btn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="end"
-            android:layout_marginEnd="11dp"
-            android:layout_marginBottom="283dp"
-            android:background="@android:color/transparent"
-            android:elevation="20dp"
-            app:srcCompat="@drawable/close" />
-
 
     </RelativeLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
