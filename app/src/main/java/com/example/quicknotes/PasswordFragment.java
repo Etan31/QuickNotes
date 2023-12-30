@@ -45,6 +45,19 @@ public class PasswordFragment extends Fragment {
         EditText retypePasswordEditText = view.findViewById(R.id.retypepass);
         Button submitButton = view.findViewById(R.id.SubmitBtn);
 
+
+        Button backBtn = view.findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(v -> {
+            Log.d("closed", "closed");
+            // Dismiss the fragment or hide the container
+            if (getActivity() != null) {
+                View popupContainer = getActivity().findViewById(R.id.password_popup_container);
+                if (popupContainer != null) {
+                    popupContainer.setVisibility(View.GONE);
+                }
+            }
+        });
+
         submitButton.setOnClickListener(v -> {
             Log.d("Save", "Submit button clicked");
             Log.d("Save", "Hello from click listener"); // Add this line
@@ -74,7 +87,7 @@ public class PasswordFragment extends Fragment {
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     // Optional: Close the fragment or hide the container on the main thread
-                    View container = getView().findViewById(R.id.password_popup_container);
+                    View container = getActivity().findViewById(R.id.password_popup_container);
                     if (container != null) {
                         container.setVisibility(View.GONE);
                     }
@@ -84,4 +97,6 @@ public class PasswordFragment extends Fragment {
 
         return view;
     }
+
+
 }

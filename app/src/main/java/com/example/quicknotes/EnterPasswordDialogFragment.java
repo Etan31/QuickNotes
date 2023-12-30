@@ -32,6 +32,30 @@ public class EnterPasswordDialogFragment extends DialogFragment {
 
         Log.d(TAG, "Dialog Fragment created");
 
+        Button backBtn = enterPasswordView.findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(v -> {
+            Log.d("closed", "closed");
+            if (getDialog() != null) {
+                getDialog().dismiss();
+            }
+        });
+
+
+//        Button backBtn = enterPasswordView.findViewById(R.id.backBtn);
+//        backBtn.setOnClickListener(v -> {
+//            Log.d("closed", "closed");
+//            getView().findViewById(R.id.password_popup_container).setVisibility(View.GONE);
+//
+//            // Check the visibility of the container
+////            if (getView() != null) {
+////                boolean isContainerVisible = getView().findViewById(R.id.password_popup_container).getVisibility() == View.VISIBLE;
+////                Log.d("closed", "Container is visible: " + isContainerVisible);
+////
+////                // Handle close button click
+////                getView().findViewById(R.id.password_popup_container).setVisibility(View.GONE);
+////            }
+//        });
+
         submitButton.setOnClickListener(v -> {
             Log.d(TAG, "Submit button clicked");
 

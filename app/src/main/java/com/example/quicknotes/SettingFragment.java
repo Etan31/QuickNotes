@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.example.quicknotes.database.AppDatabase;
 import com.example.quicknotes.viewmodel.PasswordViewModel;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,32 +77,44 @@ public class SettingFragment extends Fragment {
     }
 
 //    ----------------------------------------
-    private static class PasswordAsyncTask extends AsyncTask<Void, Void, PasswordEntity> {
+private static class PasswordAsyncTask extends AsyncTask<Void, Void, List<PasswordEntity>> {
     private WeakReference<Context> contextWeakReference;
     private WeakReference<Button> changeResetPasswordButtonWeakReference;
     private WeakReference<SettingFragment> fragmentWeakReference;
 
-    PasswordAsyncTask(SettingFragment fragment, Context context, Button changeResetPasswordButton) {
-        this.contextWeakReference = new WeakReference<>(context);
-        this.changeResetPasswordButtonWeakReference = new WeakReference<>(changeResetPasswordButton);
-        this.fragmentWeakReference = new WeakReference<>(fragment);
-    }
+        PasswordAsyncTask(SettingFragment fragment, Context context, Button changeResetPasswordButton) {
+            this.contextWeakReference = new WeakReference<>(context);
+            this.changeResetPasswordButtonWeakReference = new WeakReference<>(changeResetPasswordButton);
+            this.fragmentWeakReference = new WeakReference<>(fragment);
+        }
 
-    @Override
-    protected PasswordEntity doInBackground(Void... voids) {
-        if (isCancelled()) {
+        @Override
+        protected List<PasswordEntity> doInBackground(Void... voids) {
+            if (isCancelled()) {
+                return null;
+            }
+
+            Context context = contextWeakReference.get();
+            if (context != null) {
+                return AppDatabase.getInstance(context.getApplicationContext()).passwordDao().getAllPasswords();
+            }
             return null;
         }
 
-        Context context = contextWeakReference.get();
-        if (context != null) {
-            return AppDatabase.getInstance(context.getApplicationContext()).passwordDao().getPassword();
+        @Override
+        protected void onPostExecute(List<PasswordEntity> passwords) {
+            super.onPostExecute(passwords);
+
+            if (passwords != null && !passwords.isEmpty()) {
+                // Log all passwords
+                for (PasswordEntity password : passwords) {
+//                    TODO: THIS LOGS AFTER GOING TO THE SETTING FRAGMENT.
+                    Log.d("Password Check", "Saved Password: " + password.getPassword());
+                }
+            }
         }
-        return null;
     }
 
-
-}
 
 
 
@@ -134,7 +148,9 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Share the application
-                shareApp();
+//                shareApp();
+
+                showCreatePasswordUI();
             }
         });
 
@@ -186,28 +202,29 @@ public class SettingFragment extends Fragment {
     }
 
     private void showEnterPasswordUI(PasswordEntity savedPassword) {
-        // Set the fragment layout for entering password
         View enterPasswordView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_lock, null);
         EnterPasswordDialogFragment dialogFragment = new EnterPasswordDialogFragment(savedPassword);
         dialogFragment.show(getChildFragmentManager(), "EnterPasswordDialogFragment");
-        Log.d("showEnterPasswordUI", "clicked functions yessss");
     }
+
+
 
     private void showCreatePasswordUI() {
-        Log.d("Savjojghke", "showCreatePasswordUI called");
-
-        // Create an instance of your PasswordFragment
         PasswordFragment passwordFragment = new PasswordFragment();
-
-        // Use a transaction to add the PasswordFragment to the container
         getParentFragmentManager().beginTransaction()
-                .replace(R.id.password_popup_container, passwordFragment) // Use the existing instance
+                .replace(R.id.password_popup_container, passwordFragment)
                 .addToBackStack(null)
                 .commit();
+        //for any listener goto passwordFragment.java
 
         // Set the visibility of the container to visible
-        getView().findViewById(R.id.password_popup_container).setVisibility(View.VISIBLE);
+        if (getView() != null) {
+            getView().findViewById(R.id.password_popup_container).setVisibility(View.VISIBLE);
+        }
+
     }
+
+
 
 
 
