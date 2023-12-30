@@ -77,52 +77,6 @@ public class SettingFragment extends Fragment {
         }
     }
 
-//    ----------------------------------------
-private static class PasswordAsyncTask extends AsyncTask<Void, Void, List<PasswordEntity>> {
-    private WeakReference<Context> contextWeakReference;
-    private WeakReference<Button> changeResetPasswordButtonWeakReference;
-    private WeakReference<SettingFragment> fragmentWeakReference;
-
-        PasswordAsyncTask(SettingFragment fragment, Context context, Button changeResetPasswordButton) {
-            this.contextWeakReference = new WeakReference<>(context);
-            this.changeResetPasswordButtonWeakReference = new WeakReference<>(changeResetPasswordButton);
-            this.fragmentWeakReference = new WeakReference<>(fragment);
-        }
-
-        @Override
-        protected List<PasswordEntity> doInBackground(Void... voids) {
-            if (isCancelled()) {
-                return null;
-            }
-
-            Context context = contextWeakReference.get();
-            if (context != null) {
-                return AppDatabase.getInstance(context.getApplicationContext()).passwordDao().getAllPasswords();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<PasswordEntity> passwords) {
-            super.onPostExecute(passwords);
-
-            if (passwords != null && !passwords.isEmpty()) {
-                // Log all passwords
-                for (PasswordEntity password : passwords) {
-//                    TODO: THIS LOGS AFTER GOING TO THE SETTING FRAGMENT.
-                    Log.d("Password Check", "Saved Password: " + password.getPassword());
-                }
-            }
-        }
-    }
-
-
-
-
-
-
-//    ----------------------------------------
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -130,10 +84,6 @@ private static class PasswordAsyncTask extends AsyncTask<Void, Void, List<Passwo
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
         Button changeResetPasswordButton = view.findViewById(R.id.change_resetPass);
-        new PasswordAsyncTask(this, requireContext(), changeResetPasswordButton).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-
-
         TextView exitTextView = view.findViewById(R.id.exit);
         exitTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,27 +120,17 @@ private static class PasswordAsyncTask extends AsyncTask<Void, Void, List<Passwo
         PasswordViewModel passwordViewModel = new ViewModelProvider(this).get(PasswordViewModel.class);
         passwordViewModel.getPasswordLiveData().observe(getViewLifecycleOwner(), savedPassword -> {
             if (savedPassword != null) {
-                // Password is saved, show enter password UI or handle accordingly
+
                 changeResetPasswordButton.setOnClickListener(v -> {
-                    // Show UI to enter password
-                    // Example: showEnterPasswordDialog();
-                    Toast.makeText(requireContext(), "1Password", Toast.LENGTH_SHORT).show();
-//                    showEnterPasswordUI(savedPassword);
-                    Log.d("com/example/quicknotes/password", "You have password set.");
-                    Log.d("popup", "popup_lock is displayed");
                     showEnterPasswordUI(savedPassword);
                 });
+
             } else {
-                // No password saved, show create password UI or handle accordingly
+
                 changeResetPasswordButton.setOnClickListener(v -> {
-                    // Show UI to create password
-                    // Example: showCreatePasswordDialog();
                     showCreatePasswordUI();
-                    Log.d("com/example/quicknotes/password", "You don't have password set.");
-                    Log.d("popup", "popup_createpassword is displayed");
-
-
                 });
+
             }
         });
 
@@ -199,6 +139,8 @@ private static class PasswordAsyncTask extends AsyncTask<Void, Void, List<Passwo
 
         return view;
     }
+
+
 
     private void showEnterPasswordUI(PasswordEntity savedPassword) {
         View enterPasswordView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_lock, null);
@@ -230,43 +172,43 @@ private static class PasswordAsyncTask extends AsyncTask<Void, Void, List<Passwo
 
 
 
-    private void clicked() {
-        Log.d("SavesasdASF", "click");
-
-        View createPasswordView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_createpassword, null);
-        EditText passwordEditText = createPasswordView.findViewById(R.id.typepass);
-        EditText retypePasswordEditText = createPasswordView.findViewById(R.id.retypepass);
-        Button submitButton = createPasswordView.findViewById(R.id.SubmitBtn);
-
-        submitButton.setOnClickListener(v -> {
-            Log.d("Savesss", "Clicked button");
-
-            String password = passwordEditText.getText().toString();
-            String retypePassword = retypePasswordEditText.getText().toString();
-            Log.d("Save", "clicked");
-            Log.d("Save", password);
-            Log.d("Save", retypePassword);
-
-            if (!password.equals(retypePassword)) {
-                // Passwords do not match, show an error message
-                Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
-                return; // Return to avoid saving incorrect password
-            }
-
-            // Passwords match, save the password
-            AppDatabase.getInstance(requireContext()).passwordDao().savePassword(new PasswordEntity(password));
-
-            // Log the Submit button click
-            Log.d("Save", "Submit button clicked");
-
-            // Handle accordingly (e.g., navigate to the main activity)
-
-            // Optional: Close the fragment or hide the container
-            getView().findViewById(R.id.password_popup_container).setVisibility(View.GONE);
-
-            // Rest of the code...
-        });
-    }
+//    private void clicked() {
+//        Log.d("SavesasdASF", "click");
+//
+//        View createPasswordView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_createpassword, null);
+//        EditText passwordEditText = createPasswordView.findViewById(R.id.typepass);
+//        EditText retypePasswordEditText = createPasswordView.findViewById(R.id.retypepass);
+//        Button submitButton = createPasswordView.findViewById(R.id.SubmitBtn);
+//
+//        submitButton.setOnClickListener(v -> {
+//            Log.d("Savesss", "Clicked button");
+//
+//            String password = passwordEditText.getText().toString();
+//            String retypePassword = retypePasswordEditText.getText().toString();
+//            Log.d("Save", "clicked");
+//            Log.d("Save", password);
+//            Log.d("Save", retypePassword);
+//
+//            if (!password.equals(retypePassword)) {
+//                // Passwords do not match, show an error message
+//                Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+//                return; // Return to avoid saving incorrect password
+//            }
+//
+//            // Passwords match, save the password
+//            AppDatabase.getInstance(requireContext()).passwordDao().savePassword(new PasswordEntity(password));
+//
+//            // Log the Submit button click
+//            Log.d("Save", "Submit button clicked");
+//
+//            // Handle accordingly (e.g., navigate to the main activity)
+//
+//            // Optional: Close the fragment or hide the container
+//            getView().findViewById(R.id.password_popup_container).setVisibility(View.GONE);
+//
+//            // Rest of the code...
+//        });
+//    }
 
 
 

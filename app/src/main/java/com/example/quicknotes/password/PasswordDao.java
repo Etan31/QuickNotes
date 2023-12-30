@@ -1,5 +1,6 @@
 package com.example.quicknotes.password;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -27,4 +28,5 @@ public interface PasswordDao {
 
     @Query("SELECT * FROM passwords")
     List<PasswordEntity> getAllPasswords();
+
 }

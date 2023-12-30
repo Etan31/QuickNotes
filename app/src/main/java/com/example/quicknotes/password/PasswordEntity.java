@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "passwords")
 public class PasswordEntity {
 
+
     @PrimaryKey(autoGenerate = true)
     private int id;
 

@@ -1,37 +1,25 @@
 package com.example.quicknotes.password;
 
+import android.app.Application;
 import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+
+import com.example.quicknotes.database.AppDatabase;
 
 import java.util.List;
 
 public class PasswordRepository {
     private PasswordDao passwordDao;
-    public PasswordRepository(PasswordDao passwordDao) {
-        this.passwordDao = passwordDao;
+    private LiveData<List<PasswordEntity>> allPasswords;
+
+    public PasswordRepository(Application application) {
+        AppDatabase db = AppDatabase.getInstance(application);
+        passwordDao = db.passwordDao();
+        allPasswords = (LiveData<List<PasswordEntity>>) (LiveData<List<PasswordEntity>>) passwordDao.getAllPasswords();
     }
 
-    public PasswordEntity getSavedPassword() {
-        return passwordDao.getSavedPassword();
-    }
-
-    public void checkPassword(String enteredPassword) {
-        List<PasswordEntity> allPasswords = passwordDao.getAllPasswords();
-        boolean passwordMatches = false;
-
-        for (PasswordEntity savedPassword : allPasswords) {
-            if (enteredPassword.equals(savedPassword.getPassword())) {
-                // Password matches
-                passwordMatches = true;
-                break;
-            }
-        }
-
-        if (passwordMatches) {
-            // Log "Password matches"
-            Log.d("Password Check", "Password matches");
-        } else {
-            // Log "No password matches"
-            Log.d("Password Check", "No password matches");
-        }
+    public LiveData<List<PasswordEntity>> getAllPasswords() {
+        return allPasswords;
     }
 }

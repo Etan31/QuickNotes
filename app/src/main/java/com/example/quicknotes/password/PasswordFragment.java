@@ -30,7 +30,8 @@ public class PasswordFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.popup_createpassword, container, false);
 
-
+//          showCreatePasswordUI();
+        // for creating new passowrd.
 
         // Set the click listener for the Submit button directly within this method
         EditText passwordEditText = view.findViewById(R.id.typepass);
@@ -52,14 +53,9 @@ public class PasswordFragment extends Fragment {
 
         submitButton.setOnClickListener(v -> {
             Log.d("Save", "Submit button clicked");
-            Log.d("Save", "Hello from click listener"); // Add this line
-            
 
             String password = passwordEditText.getText().toString();
             String retypePassword = retypePasswordEditText.getText().toString();
-            Log.d("Save", "clicked");
-            Log.d("Save", password);
-            Log.d("Save", retypePassword);
 
             if (!password.equals(retypePassword)) {
                 // Passwords do not match, show an error message
