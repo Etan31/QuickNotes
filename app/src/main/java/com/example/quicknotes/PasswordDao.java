@@ -6,10 +6,12 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import java.util.List;
+
 @Dao
 public interface PasswordDao {
 
-    @Query("SELECT * FROM passwords LIMIT 3")
+    @Query("SELECT * FROM passwords LIMIT 1")
     PasswordEntity getPassword();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -23,4 +25,7 @@ public interface PasswordDao {
     @Query("SELECT * FROM passwords WHERE id = 1 LIMIT 1")
     PasswordEntity getSavedPassword();
 
+
+    @Query("SELECT * FROM passwords")
+    List<PasswordEntity> getAllPasswords();
 }
