@@ -1,16 +1,13 @@
 package com.example.quicknotes.database;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.RoomSQLiteQuery;
-import androidx.sqlite.db.SupportSQLiteStatement;
 
-import com.example.quicknotes.PasswordDao;
-import com.example.quicknotes.PasswordEntity;
+import com.example.quicknotes.password.PasswordDao;
+import com.example.quicknotes.password.PasswordEntity;
 
 @Database(entities = {PasswordEntity.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {

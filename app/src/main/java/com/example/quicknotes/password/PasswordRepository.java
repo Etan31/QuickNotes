@@ -1,4 +1,4 @@
-package com.example.quicknotes;
+package com.example.quicknotes.password;
 
 import android.util.Log;
 

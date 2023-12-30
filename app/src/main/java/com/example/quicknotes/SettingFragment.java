@@ -16,11 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.quicknotes.database.AppDatabase;
+import com.example.quicknotes.password.PasswordEntity;
+import com.example.quicknotes.password.PasswordFragment;
 import com.example.quicknotes.viewmodel.PasswordViewModel;
 
 import java.lang.ref.WeakReference;
@@ -175,7 +176,7 @@ private static class PasswordAsyncTask extends AsyncTask<Void, Void, List<Passwo
                     // Example: showEnterPasswordDialog();
                     Toast.makeText(requireContext(), "1Password", Toast.LENGTH_SHORT).show();
 //                    showEnterPasswordUI(savedPassword);
-                    Log.d("password", "You have password set.");
+                    Log.d("com/example/quicknotes/password", "You have password set.");
                     Log.d("popup", "popup_lock is displayed");
                     showEnterPasswordUI(savedPassword);
                 });
@@ -185,7 +186,7 @@ private static class PasswordAsyncTask extends AsyncTask<Void, Void, List<Passwo
                     // Show UI to create password
                     // Example: showCreatePasswordDialog();
                     showCreatePasswordUI();
-                    Log.d("password", "You don't have password set.");
+                    Log.d("com/example/quicknotes/password", "You don't have password set.");
                     Log.d("popup", "popup_createpassword is displayed");
 
 

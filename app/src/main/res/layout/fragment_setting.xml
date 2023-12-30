@@ -148,7 +148,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/password_popup_container"
-        android:name="com.example.quicknotes.PasswordFragment"
+        android:name="com.example.quicknotes.password.PasswordFragment"
         android:layout_width="343dp"
         android:layout_height="366dp"
         android:visibility="invisible"

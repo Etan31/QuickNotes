@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.quicknotes.PasswordEntity;
+import com.example.quicknotes.password.PasswordEntity;
 import com.example.quicknotes.database.AppDatabase;
 
 import java.lang.ref.WeakReference;

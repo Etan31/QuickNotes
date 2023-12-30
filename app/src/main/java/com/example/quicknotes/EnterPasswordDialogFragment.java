@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.quicknotes.password.PasswordEntity;
+
 public class EnterPasswordDialogFragment extends DialogFragment {
     private static final String TAG = "EnterPasswordDialogFrag";
     private PasswordEntity savedPassword;

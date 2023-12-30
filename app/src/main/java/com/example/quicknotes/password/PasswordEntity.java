@@ -1,4 +1,4 @@
-package com.example.quicknotes;
+package com.example.quicknotes.password;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
