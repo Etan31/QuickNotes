@@ -143,7 +143,6 @@ public class SettingFragment extends Fragment {
 
 
     private void showEnterPasswordUI(PasswordEntity savedPassword) {
-        View enterPasswordView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_lock, null);
         EnterPasswordDialogFragment dialogFragment = new EnterPasswordDialogFragment(savedPassword);
         dialogFragment.show(getChildFragmentManager(), "EnterPasswordDialogFragment");
     }

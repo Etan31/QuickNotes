@@ -18,6 +18,7 @@ import androidx.room.Room;
 import com.example.quicknotes.database.AppDatabase;
 import com.example.quicknotes.password.PasswordDao;
 import com.example.quicknotes.password.PasswordEntity;
+import com.example.quicknotes.password.PasswordFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class EnterPasswordDialogFragment extends DialogFragment {
     public EnterPasswordDialogFragment(PasswordEntity savedPassword) {
         // Do something with savedPassword if needed
     }
+
 
     @Nullable
     @Override
@@ -69,22 +71,49 @@ public class EnterPasswordDialogFragment extends DialogFragment {
 
                 // Use the main thread dispatcher to update the UI with the result
                 new Handler(Looper.getMainLooper()).post(() -> {
+                    boolean passwordMatched = false;
                     for (PasswordEntity savedPassword : savedPasswords) {
                         if (enteredPassword.equals(savedPassword.getPassword())) {
-                            Log.d("password", "Password matched!");
-                            // Do whatever you need to do when the password matches
+                            Toast.makeText(requireContext(), "Password matched", Toast.LENGTH_SHORT).show();
+                            dismissDialog();
+                            showCreatePasswordUI();
+                            passwordMatched = true;
                             break;
                         }
+                    }
+
+                    if (!passwordMatched) {
+                        Toast.makeText(requireContext(), "No password matched, please try again.", Toast.LENGTH_SHORT).show();
                     }
                 });
             }).start();
         });
 
-
-
-
-
-
         return enterPasswordView;
     }
+
+    private void dismissDialog() {
+        if (getDialog() != null) {
+            getDialog().dismiss();
+            isDialogDismissed = true;
+            Log.d("click", "dismissed");
+        }
+    }
+
+    private boolean isDialogDismissed = false;
+
+
+    private void showCreatePasswordUI() {
+        PasswordFragment passwordFragment = new PasswordFragment();
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.password_popup_container, passwordFragment)
+                .addToBackStack(null)
+                .commit();
+
+    }
+
+
+
+
+
 }

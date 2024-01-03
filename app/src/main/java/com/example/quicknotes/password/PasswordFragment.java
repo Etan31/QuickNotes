@@ -59,8 +59,8 @@ public class PasswordFragment extends Fragment {
 
             if (!password.equals(retypePassword)) {
                 // Passwords do not match, show an error message
-                Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
-                return; // Return to avoid saving an incorrect password
+                Toast.makeText(requireContext(), "Passwords do not match, please try again.", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             // Use AsyncTask to perform the database operation in the background

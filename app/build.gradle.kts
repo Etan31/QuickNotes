@@ -49,6 +49,8 @@ dependencies {
 
     //    for room data base
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation ("androidx.fragment:fragment:1.4.0")
+
     annotationProcessor("androidx.room:room-compiler:2.6.0")
 
 

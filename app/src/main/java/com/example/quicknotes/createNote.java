@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,9 +33,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.quicknotes.database.NotesDatabase;
 import com.example.quicknotes.entities.Note;
+import com.example.quicknotes.password.PasswordFragment;
+import com.example.quicknotes.viewmodel.PasswordViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.InputStream;
@@ -218,6 +222,25 @@ public class createNote extends AppCompatActivity {
         final ImageView imageColor4 = layoutMiscellaneous.findViewById(R.id.imageColor4);
         final ImageView imageColor5 = layoutMiscellaneous.findViewById(R.id.imageColor5);
 
+        //onclick listener for the locked notes
+        final Button lockNotesBtn = layoutMiscellaneous.findViewById(R.id.lockNotesBtn);
+
+        PasswordViewModel passwordViewModel = new ViewModelProvider(this).get(PasswordViewModel.class);
+        passwordViewModel.getPasswordLiveData().observe(this, savedPassword -> {
+            if (savedPassword != null) {
+                lockNotesBtn.setOnClickListener(v -> {
+                    Toast.makeText(createNote.this, "Locked", Toast.LENGTH_SHORT).show();
+                });
+            } else {
+                lockNotesBtn.setOnClickListener(v -> {
+                     showCreatePasswordUI();
+                    Toast.makeText(createNote.this, "Not Locked", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+        passwordViewModel.loadPassword(this);
+
+
         layoutMiscellaneous.findViewById(R.id.viewColor1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -345,6 +368,22 @@ public class createNote extends AppCompatActivity {
             });
         }
     }
+
+    private void showCreatePasswordUI() {
+        PasswordFragment passwordFragment = new PasswordFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.password_popup_container, passwordFragment)
+                .addToBackStack(null)
+                .commit();
+
+        // Set the visibility of the container to visible
+        View passwordContainer = findViewById(R.id.password_popup_container);
+        if (passwordContainer != null) {
+            passwordContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+
     private void showDeleteNoteDialog() {
         if (dialogDeleteNote == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(createNote.this);
