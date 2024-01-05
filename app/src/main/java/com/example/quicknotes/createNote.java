@@ -435,7 +435,6 @@ public class createNote extends AppCompatActivity {
 
         startActivityForResult(intent, PICK_PDF_REQUEST_CODE);
 
-        // In onActivityResult, handle the result and get the selected PDF file path.
         return selectedPdfFilePath;
     }
 
@@ -480,37 +479,7 @@ public class createNote extends AppCompatActivity {
 
 
 
-//    private void insertPdfFile(String pdfFilePath) {
-//        Log.d("PDF_INSERT", "Inserting PDF file into the database. Path: " + pdfFilePath);
-//
-//        // Check if the selected file is a PDF
-//        if (!isPdfFile(pdfFilePath)) {
-//            // Handle the case where the selected file is not a PDF
-//            Toast.makeText(this, "Only PDF files are allowed", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        // Create a FileEntity object and set its properties
-//        FileEntity fileEntity = new FileEntity();
-//        fileEntity.setFileName(getFileNameFromPath(pdfFilePath));
-//        fileEntity.setFilePath(pdfFilePath);
-//        fileEntity.setFileType("pdf"); // You can set a specific type if needed
-//
-//        // Insert the FileEntity into the Room Database
-//        long fileId = appDatabase.fileDao().insertFile(fileEntity);
-//
-//        // Handle the insertion result as needed
-//        if (fileId > 0) {
-//            Log.d("PDF_INSERT", "PDF file inserted successfully. File ID: " + fileId);
-////            Toast.makeText(this, "PDF file inserted successfully", Toast.LENGTH_SHORT).show();
-//        } else {
-//            Log.e("PDF_INSERT", "Failed to insert PDF file");
-////            Toast.makeText(this, "Failed to insert PDF file", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
-
-
+//  to insert new pdf file
     private void insertPdfFile(String pdfFilePath) {
         // Check if the selected file is a PDF
         if (!isPdfFile(pdfFilePath)) {
@@ -529,6 +498,7 @@ public class createNote extends AppCompatActivity {
         new InsertPdfFileTask().execute((Runnable) fileEntity);
     }
 
+//    inserting pdf on the background thread
     private class InsertPdfFileTask extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
@@ -555,18 +525,19 @@ public class createNote extends AppCompatActivity {
 
 
 
-
+//to validate the file extention
     private boolean isPdfFile(String filePath) {
         String fileType = getFileExtension(getFileNameFromPath(filePath));
         return "pdf".equalsIgnoreCase(fileType);
     }
 
-
+//  to get the file path
     private String getFileNameFromPath(String filePath) {
         File file = new File(filePath);
         return file.getName();
     }
 
+//    to get the extension of a file(eg. .pdf)
     private String getFileExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf('.');
         if (dotIndex == -1) {
@@ -575,7 +546,7 @@ public class createNote extends AppCompatActivity {
         return fileName.substring(dotIndex + 1).toLowerCase();
     }
 
-
+    //create new passsword when the user has current password
     private void showCreatePasswordUI() {
         PasswordFragment passwordFragment = new PasswordFragment();
         getSupportFragmentManager().beginTransaction()
@@ -591,6 +562,7 @@ public class createNote extends AppCompatActivity {
     }
 
 
+    //show dialog to delete note
     private void showDeleteNoteDialog() {
         if (dialogDeleteNote == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(createNote.this);
@@ -657,6 +629,7 @@ public class createNote extends AppCompatActivity {
         }
     }
 
+//    permission for reading images
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
