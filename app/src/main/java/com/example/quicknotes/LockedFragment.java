@@ -1,12 +1,25 @@
 package com.example.quicknotes;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.example.quicknotes.database.LockedNotesDatabase;
+import com.example.quicknotes.locked_notes.LockedNote;
+import com.example.quicknotes.locked_notes.LockedNotesAdapter;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +27,8 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class LockedFragment extends Fragment {
+    private RecyclerView lockedNotesRecyclerView;
+    private LockedNotesAdapter lockedNotesAdapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,9 +71,68 @@ public class LockedFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_locked, container, false);
+        View view = inflater.inflate(R.layout.fragment_locked, container, false);
+
+        // Initialize RecyclerView and Adapter
+        lockedNotesRecyclerView = view.findViewById(R.id.LockednotesRecyclerView);
+        lockedNotesAdapter = new LockedNotesAdapter(new ArrayList<>());
+        lockedNotesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        lockedNotesRecyclerView.setAdapter(lockedNotesAdapter);
+
+        int spanCount = 2;
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), spanCount);
+        lockedNotesRecyclerView.setLayoutManager(gridLayoutManager);
+
+        // Set the adapter
+        lockedNotesRecyclerView.setAdapter(lockedNotesAdapter);
+        // Load locked notes from the database and update the adapter
+        loadLockedNotes();
+
+        return view;
     }
+
+
+
+
+    private void loadLockedNotes() {
+        new LoadLockedNotesTask(this).execute();
+    }
+//  to load all locked notes
+    private void onLockedNotesLoaded(List<LockedNote> lockedNotes) {
+        if (lockedNotes != null) {
+            lockedNotesAdapter.setLockedNotes(lockedNotes);
+        }
+    }
+
+//    to lock notes on the background task
+    private static class LoadLockedNotesTask extends AsyncTask<Void, Void, List<LockedNote>> {
+
+        private final WeakReference<LockedFragment> fragmentReference;
+
+        public LoadLockedNotesTask(LockedFragment fragment) {
+            this.fragmentReference = new WeakReference<>(fragment);
+        }
+
+
+//        to query and select all the locked notes from the database
+        @Override
+        protected List<LockedNote> doInBackground(Void... voids) {
+            LockedFragment fragment = fragmentReference.get();
+            if (fragment != null) {
+                return LockedNotesDatabase.getInstance(fragment.requireContext()).lockedNoteDao().getAllLockedNotes();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<LockedNote> lockedNotes) {
+            LockedFragment fragment = fragmentReference.get();
+            if (fragment != null) {
+                fragment.onLockedNotesLoaded(lockedNotes);
+            }
+        }
+    }
+
 }
