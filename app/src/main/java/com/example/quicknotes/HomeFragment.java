@@ -138,6 +138,7 @@ public class HomeFragment extends Fragment implements NotesListener {
         return view;
     }
 
+    //on clicking the note displayed on the home fragment.
     @Override
     public void onNoteClicked(Note note, int position) {
         noteClickedPosition = position;
@@ -147,6 +148,7 @@ public class HomeFragment extends Fragment implements NotesListener {
         startActivityForResult(intent, REQUEST_CODE_UPDATE_NOTE);
 
     }
+//    to be displayed note after clicking.
     private void getNotes(final int requestCode, final boolean isNoteDeleted){
 
         @SuppressLint("StaticFieldLeak")

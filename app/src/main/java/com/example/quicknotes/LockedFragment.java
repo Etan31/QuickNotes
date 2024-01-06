@@ -1,5 +1,6 @@
 package com.example.quicknotes;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +28,9 @@ import java.util.List;
  * Use the {@link LockedFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LockedFragment extends Fragment {
+public class LockedFragment extends Fragment implements LockedNotesAdapter.OnLockedNoteClickListener {
     private RecyclerView lockedNotesRecyclerView;
+
     private LockedNotesAdapter lockedNotesAdapter;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -76,7 +79,9 @@ public class LockedFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_locked, container, false);
 
         // Initialize RecyclerView and Adapter
+//        D ak maaram kun kanan ano in, basta importante in hahaha
         lockedNotesRecyclerView = view.findViewById(R.id.LockednotesRecyclerView);
+
         lockedNotesAdapter = new LockedNotesAdapter(new ArrayList<>());
         lockedNotesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         lockedNotesRecyclerView.setAdapter(lockedNotesAdapter);
@@ -116,7 +121,7 @@ public class LockedFragment extends Fragment {
         }
 
 
-//        to query and select all the locked notes from the database
+//        to Query and select all the locked notes from the database
         @Override
         protected List<LockedNote> doInBackground(Void... voids) {
             LockedFragment fragment = fragmentReference.get();
@@ -126,6 +131,7 @@ public class LockedFragment extends Fragment {
             return null;
         }
 
+//      Then display the selected Query
         @Override
         protected void onPostExecute(List<LockedNote> lockedNotes) {
             LockedFragment fragment = fragmentReference.get();
@@ -134,5 +140,16 @@ public class LockedFragment extends Fragment {
             }
         }
     }
+
+    //when the locked note is clicked.
+    private static final int REQUEST_CODE_UPDATE_LOCKED_NOTE = 1; // You can use any integer value
+    @Override
+    public void onLockedNoteClicked(LockedNote lockedNote, int position) {
+        Log.d("Click", "Locked note clicked: " + lockedNote.getTitle());
+        Intent intent = new Intent(requireContext(), OpenedLockedNoteActivity.class);
+        intent.putExtra("lockedNote", lockedNote);
+        startActivityForResult(intent, REQUEST_CODE_UPDATE_LOCKED_NOTE);
+    }
+
 
 }

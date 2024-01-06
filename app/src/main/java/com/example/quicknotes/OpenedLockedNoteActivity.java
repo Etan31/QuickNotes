@@ -1,0 +1,122 @@
+package com.example.quicknotes;
+
+import static android.content.Intent.getIntent;
+
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+
+import com.example.quicknotes.locked_notes.LockedNote;
+
+public class OpenedLockedNoteActivity extends AppCompatActivity{
+    private TextView inputNoteTitle;
+    private TextView inputNoteSubtitle;
+    private TextView inputNote;
+    private TextView textDateTime;
+    private ImageView imageNote;
+    private ImageView imageRemoveImage;
+    private LinearLayout layoutWebURL;
+    private TextView textWebURL;
+    private ImageView imageRemoveWebURL;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.opened_lockednote);
+
+        findViewById(R.id.imageBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call the method to handle back button press
+                onBackButtonPressed();
+            }
+        });
+
+        // Initialize your views
+        inputNoteTitle = findViewById(R.id.inputNoteTitle);
+        inputNoteSubtitle = findViewById(R.id.inputNoteSubtitle);
+        inputNote = findViewById(R.id.inputNote);
+        textDateTime = findViewById(R.id.textDateTime);
+        imageNote = findViewById(R.id.imageNote);
+        imageRemoveImage = findViewById(R.id.imageRemoveImage);
+        layoutWebURL = findViewById(R.id.layoutWebURL);
+        textWebURL = findViewById(R.id.textWebURL);
+        imageRemoveWebURL = findViewById(R.id.imageRemoveWebURL);
+
+        Intent intent = getIntent();
+//        if (intent != null && intent.hasExtra("isViewOrUpdate") && intent.getBooleanExtra("isViewOrUpdate", false)) {
+//            LockedNote lockedNote = intent.getParcelableExtra("lockedNote");
+//            if (lockedNote != null) {
+//                displayLockedNoteDetails(lockedNote);
+//            }
+//        }
+        if (intent != null && intent.hasExtra("lockedNote")) {
+            // Retrieve the LockedNote object from the Intent
+            LockedNote lockedNote = intent.getParcelableExtra("lockedNote");
+
+            // Display the details of the locked note
+            displayLockedNoteDetails(lockedNote);
+        }
+    }
+
+
+
+    private void displayLockedNoteDetails(LockedNote lockedNote) {
+        // Set the text of your EditText views with the details of the locked note
+        inputNoteTitle.setText(lockedNote.getTitle());
+        inputNoteSubtitle.setText(lockedNote.getSubtitle());
+        inputNote.setText(lockedNote.getNoteText());
+        textDateTime.setText(lockedNote.getDateTime());
+
+        // Check for image and display if available
+        if (lockedNote.getImagePath() != null && !lockedNote.getImagePath().trim().isEmpty()) {
+            imageNote.setImageBitmap(BitmapFactory.decodeFile(lockedNote.getImagePath()));
+            imageNote.setVisibility(View.VISIBLE);
+        } else {
+            imageNote.setVisibility(View.GONE);
+        }
+
+//        // Check for image and display if available
+//        if (lockedNote.getImagePath() != null && !lockedNote.getImagePath().trim().isEmpty()) {
+//            imageNote.setImageBitmap(BitmapFactory.decodeFile(lockedNote.getImagePath()));
+//            imageNote.setVisibility(View.VISIBLE);
+//            imageRemoveImage.setVisibility(View.VISIBLE);
+//        } else {
+//            imageNote.setVisibility(View.GONE);
+//            imageRemoveImage.setVisibility(View.GONE);
+//        }
+
+        // Check for web link and display if available
+        if (lockedNote.getWebLink() != null && !lockedNote.getWebLink().trim().isEmpty()) {
+            layoutWebURL.setVisibility(View.VISIBLE);
+            textWebURL.setText(lockedNote.getWebLink());
+            imageRemoveWebURL.setVisibility(View.VISIBLE);
+        } else {
+            layoutWebURL.setVisibility(View.GONE);
+            imageRemoveWebURL.setVisibility(View.GONE);
+        }
+    }
+
+    private void onBackButtonPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            finish();
+        }
+    }
+
+
+
+
+}

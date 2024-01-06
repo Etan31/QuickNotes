@@ -1,10 +1,15 @@
 package com.example.quicknotes.locked_notes;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "locked_notes_table")
-public class LockedNote {
+public class LockedNote implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -98,4 +103,46 @@ public class LockedNote {
     public void setWebLink(String webLink) {
         this.webLink = webLink;
     }
+
+
+//    data to be sent and can be readable accoss multiple files
+    protected LockedNote(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        subtitle = in.readString();
+        noteText = in.readString();
+        dateTime = in.readString();
+        color = in.readString();
+        imagePath = in.readString();
+        webLink = in.readString();
+    }
+
+    public static final Parcelable.Creator<LockedNote> CREATOR = new Parcelable.Creator<LockedNote>() {
+        @Override
+        public LockedNote createFromParcel(Parcel in) {
+            return new LockedNote(in);
+        }
+
+        @Override
+        public LockedNote[] newArray(int size) {
+            return new LockedNote[size];
+        }
+    };
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(title);
+        dest.writeString(subtitle);
+        dest.writeString(noteText);
+        dest.writeString(dateTime);
+        dest.writeString(color);
+        dest.writeString(imagePath);
+        dest.writeString(webLink);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
 }
