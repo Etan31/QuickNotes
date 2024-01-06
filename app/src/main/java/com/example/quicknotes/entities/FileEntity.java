@@ -2,15 +2,26 @@ package com.example.quicknotes.entities;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "files")
-public class FileEntity {
+import java.io.Serializable;
+
+@Entity(tableName = "files", foreignKeys = @ForeignKey(
+        entity = Note.class,
+        parentColumns = "id",
+        childColumns = "noteId",
+        onDelete = ForeignKey.CASCADE
+), indices = {@Index("noteId")})
+public class FileEntity implements Serializable {
+
+
     @PrimaryKey(autoGenerate = true)
     private int fileId;
 
-    @ColumnInfo(name = "file_name")
-    private String fileName;
+    @ColumnInfo(name = "noteId")
+    private int noteId;
 
     @ColumnInfo(name = "file_path")
     private String filePath;
@@ -18,16 +29,9 @@ public class FileEntity {
     @ColumnInfo(name = "file_type")
     private String fileType;
 
-    public String getFileType() {
-        return fileType;
-    }
+    @ColumnInfo(name = "file_name")
+    private String fileName;
 
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
-    // You can add more columns such as file size, timestamp, etc.
-
-    // Getters and setters...
 
     public int getFileId() {
         return fileId;
@@ -45,6 +49,7 @@ public class FileEntity {
         this.fileName = fileName;
     }
 
+
     public String getFilePath() {
         return filePath;
     }
@@ -52,4 +57,21 @@ public class FileEntity {
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public int getNoteId() {
+        return noteId;
+    }
+
+    public void setNoteId(int noteId) {
+        this.noteId = noteId;
+    }
+
 }

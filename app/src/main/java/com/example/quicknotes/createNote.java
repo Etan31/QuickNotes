@@ -60,6 +60,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class createNote extends AppCompatActivity {
+//    TODO: add the notes id or note name on the pdf file where the pdf is being stored.
 
     private EditText inputNoteTitle, inputNoteSubtitle, inputNoteText;
     private TextView textDateTime;
@@ -466,6 +467,7 @@ public class createNote extends AppCompatActivity {
                         filePath = fd.toString();
                         fileInputStream.close();
                         parcelFileDescriptor.close();
+
                     }
                 } catch (IOException e) {
                     // Handle exceptions, if any

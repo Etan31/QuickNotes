@@ -8,10 +8,11 @@ import androidx.room.RoomDatabase;
 
 import com.example.quicknotes.dao.FileDao;
 import com.example.quicknotes.entities.FileEntity;
+import com.example.quicknotes.entities.Note;
 import com.example.quicknotes.password.PasswordDao;
 import com.example.quicknotes.password.PasswordEntity;
 
-@Database(entities = {PasswordEntity.class, FileEntity.class}, version = 2, exportSchema = false)
+@Database(entities = {PasswordEntity.class, Note.class, FileEntity.class}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract PasswordDao passwordDao();
