@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase;
 
 import com.example.quicknotes.dao.FileDao;
 import com.example.quicknotes.entities.FileEntity;
+import com.example.quicknotes.entities.Note;
 import com.example.quicknotes.password.PasswordDao;
 import com.example.quicknotes.password.PasswordEntity;
 

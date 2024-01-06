@@ -4,9 +4,11 @@ package com.example.quicknotes.entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 @Entity(tableName = "notes")
@@ -15,7 +17,6 @@ public class Note implements Serializable {
 
 @PrimaryKey(autoGenerate = true)
     private int id;
-
     @ColumnInfo(name = "title")
     private String title;
 
@@ -118,4 +119,8 @@ public class Note implements Serializable {
     public String toString() {
         return title + " : " + dateTime;
     }
+
+    @Ignore  // Mark as ignored for Room to avoid confusion
+    private List<FileEntity> files;
+
 }
