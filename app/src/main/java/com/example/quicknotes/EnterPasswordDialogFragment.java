@@ -1,6 +1,8 @@
 package com.example.quicknotes;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +13,26 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.room.Room;
+
+import com.example.quicknotes.database.AppDatabase;
+import com.example.quicknotes.password.PasswordDao;
+import com.example.quicknotes.password.PasswordEntity;
+import com.example.quicknotes.password.PasswordFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EnterPasswordDialogFragment extends DialogFragment {
     private static final String TAG = "EnterPasswordDialogFrag";
-    private PasswordEntity savedPassword;
+    private List<PasswordEntity> passwords = new ArrayList<>();
+
 
     // Constructor to pass the savedPassword value
     public EnterPasswordDialogFragment(PasswordEntity savedPassword) {
-        this.savedPassword = savedPassword;
+        // Do something with savedPassword if needed
     }
+
 
     @Nullable
     @Override
@@ -30,29 +43,77 @@ public class EnterPasswordDialogFragment extends DialogFragment {
         EditText passwordEditText = enterPasswordView.findViewById(R.id.retypepass);
         Button submitButton = enterPasswordView.findViewById(R.id.SubmitBtn);
 
-        Log.d(TAG, "Dialog Fragment created");
+
+        Button backBtn = enterPasswordView.findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(v -> {
+            Log.d("closed", "closed");
+            if (getDialog() != null) {
+                getDialog().dismiss();
+            }
+        });
+
+
+        // Assuming this is in your activity or fragment
+        AppDatabase appDatabase = Room.databaseBuilder(requireContext(), AppDatabase.class, "app_database").build();
+        PasswordDao passwordDao = appDatabase.passwordDao();
+
+
 
         submitButton.setOnClickListener(v -> {
-            Log.d(TAG, "Submit button clicked");
+            Log.d("password", "clicked submit");
 
             String enteredPassword = passwordEditText.getText().toString();
-            Log.d(TAG, "Entered Password: " + enteredPassword);
-            Log.d(TAG, "Saved Password: " + savedPassword.getPassword());
+            Log.d("password", "Entered Password: " + enteredPassword);
 
+            // Launch a coroutine in the background
+            new Thread(() -> {
+                List<PasswordEntity> savedPasswords = passwordDao.getAllPasswords();
 
-            if (enteredPassword.equals(savedPassword.getPassword()) || (enteredPassword.isEmpty() && savedPassword.getPassword() == null)) {
-                // Password is correct, handle accordingly
-                Log.d(TAG, "Correct Password");
-                // For example, navigate to the main activity
-                Toast.makeText(requireContext(), "Correct Password", Toast.LENGTH_SHORT).show();
-            } else {
-                // Password is incorrect, show an error message
-                Log.d(TAG, "Incorrect Password");
-                Toast.makeText(requireContext(), "Incorrect Password", Toast.LENGTH_SHORT).show();
-            }
+                // Use the main thread dispatcher to update the UI with the result
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    boolean passwordMatched = false;
+                    for (PasswordEntity savedPassword : savedPasswords) {
+                        if (enteredPassword.equals(savedPassword.getPassword())) {
+                            Toast.makeText(requireContext(), "Password matched", Toast.LENGTH_SHORT).show();
+                            dismissDialog();
+                            showCreatePasswordUI();
+                            passwordMatched = true;
+                            break;
+                        }
+                    }
 
+                    if (!passwordMatched) {
+                        Toast.makeText(requireContext(), "No password matched, please try again.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }).start();
         });
 
         return enterPasswordView;
     }
+
+    private void dismissDialog() {
+        if (getDialog() != null) {
+            getDialog().dismiss();
+            isDialogDismissed = true;
+            Log.d("click", "dismissed");
+        }
+    }
+
+    private boolean isDialogDismissed = false;
+
+
+    private void showCreatePasswordUI() {
+        PasswordFragment passwordFragment = new PasswordFragment();
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.password_popup_container, passwordFragment)
+                .addToBackStack(null)
+                .commit();
+
+    }
+
+
+
+
+
 }

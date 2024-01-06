@@ -1,10 +1,12 @@
-package com.example.quicknotes;
+package com.example.quicknotes.password;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+
+import java.util.List;
 
 @Dao
 public interface PasswordDao {
@@ -22,5 +24,9 @@ public interface PasswordDao {
 
     @Query("SELECT * FROM passwords WHERE id = 1 LIMIT 1")
     PasswordEntity getSavedPassword();
+
+
+    @Query("SELECT * FROM passwords")
+    List<PasswordEntity> getAllPasswords();
 
 }

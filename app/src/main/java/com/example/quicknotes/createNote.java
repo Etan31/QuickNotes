@@ -12,13 +12,17 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,11 +36,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.quicknotes.database.AppDatabase;
+import com.example.quicknotes.database.LockedNotesDatabase;
 import com.example.quicknotes.database.NotesDatabase;
+import com.example.quicknotes.entities.FileEntity;
 import com.example.quicknotes.entities.Note;
+import com.example.quicknotes.locked_notes.LockedNote;
+import com.example.quicknotes.password.PasswordFragment;
+import com.example.quicknotes.viewmodel.PasswordViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.example.quicknotes.locked_notes.LockedNote;
 
+
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -58,12 +75,16 @@ public class createNote extends AppCompatActivity {
     private AlertDialog dialogAddURL;
     private AlertDialog dialogDeleteNote;
     private Note alreadyAvailableNote;
+    private String selectedPdfFilePath;
+    private AppDatabase appDatabase;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_note);
+
+        appDatabase = AppDatabase.getInstance(this);
 
         // Set up the back button click listener
         findViewById(R.id.imageBack).setOnClickListener(new View.OnClickListener() {
@@ -94,7 +115,7 @@ public class createNote extends AppCompatActivity {
         imageSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveNote();
+                saveNote(false);
             }
         });
 
@@ -148,7 +169,7 @@ public class createNote extends AppCompatActivity {
 
 
     }
-    private void saveNote() {
+    private void saveNote(boolean isLockedNote) {
         if (inputNoteTitle.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Note title can't be empty!", Toast.LENGTH_SHORT).show();
             return;
@@ -178,9 +199,33 @@ public class createNote extends AppCompatActivity {
         @SuppressLint("StaticFieldLeak")
         class SaveNoteTask extends AsyncTask<Void, Void, Void> {
 
+            private final Note note;
+            private final boolean isLockedNote;
+
+            public SaveNoteTask(Note note, boolean isLockedNote) {
+                this.note = note;
+                this.isLockedNote = isLockedNote;
+            }
+
             @Override
             protected Void doInBackground(Void... voids) {
-                NotesDatabase.getDatabase(getApplicationContext()).noteDao().insertNote(note);
+                if (isLockedNote) {
+                    // Create a LockedNote object from the existing Note
+                        LockedNote lockedNote = new LockedNote();
+                        lockedNote.setTitle(note.getTitle());
+                        lockedNote.setSubtitle(note.getSubtitle());
+                        lockedNote.setNoteText(note.getNoteText());
+                        lockedNote.setDateTime(note.getDateTime());
+                        lockedNote.setColor(note.getColor());
+                        lockedNote.setImagePath(note.getImagePath());
+                        lockedNote.setWebLink(note.getWebLink());
+
+                    // Insert the LockedNote into the locked notes database
+                    LockedNotesDatabase.getInstance(getApplicationContext()).lockedNoteDao().insertLockedNote(lockedNote);
+                } else {
+                    // Insert the regular Note into the notes database
+                    NotesDatabase.getDatabase(getApplicationContext()).noteDao().insertNote(note);
+                }
                 return null;
             }
 
@@ -191,10 +236,11 @@ public class createNote extends AppCompatActivity {
                 setResult(RESULT_OK, intent);
                 finish();
             }
-
-
         }
-        new SaveNoteTask().execute();
+
+
+//        new SaveNoteTask().execute();
+        new SaveNoteTask(note, isLockedNote).execute();
 
     }
 
@@ -217,6 +263,28 @@ public class createNote extends AppCompatActivity {
         final ImageView imageColor3 = layoutMiscellaneous.findViewById(R.id.imageColor3);
         final ImageView imageColor4 = layoutMiscellaneous.findViewById(R.id.imageColor4);
         final ImageView imageColor5 = layoutMiscellaneous.findViewById(R.id.imageColor5);
+
+        //onclick listener for the locked notes
+        final Button lockNotesBtn = layoutMiscellaneous.findViewById(R.id.lockNotesBtn);
+        final Button attachFileBtn = layoutMiscellaneous.findViewById(R.id.attach_file);
+
+        PasswordViewModel passwordViewModel = new ViewModelProvider(this).get(PasswordViewModel.class);
+        passwordViewModel.getPasswordLiveData().observe(this, savedPassword -> {
+            if (savedPassword != null) {
+                lockNotesBtn.setOnClickListener(v -> {
+                    Toast.makeText(createNote.this, "Locked", Toast.LENGTH_SHORT).show();
+                    saveNote(true);
+                });
+            } else {
+                lockNotesBtn.setOnClickListener(v -> {
+                     showCreatePasswordUI();
+//                    initMiscellaneous();
+                    Toast.makeText(createNote.this, "Not Locked", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+        passwordViewModel.loadPassword(this);
+
 
         layoutMiscellaneous.findViewById(R.id.viewColor1).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -299,6 +367,17 @@ public class createNote extends AppCompatActivity {
         }
         }
 
+        attachFileBtn.setOnClickListener(v -> {
+            String pdfFilePath = pickPdfFile();
+
+            // Check if a valid PDF file path is obtained
+            if (pdfFilePath != null && !pdfFilePath.isEmpty()) {
+                insertPdfFile(pdfFilePath);
+            } else {
+                // Handle the case where a PDF file was not selected
+                Toast.makeText(this, "Please select a PDF file", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
 
@@ -345,6 +424,145 @@ public class createNote extends AppCompatActivity {
             });
         }
     }
+
+    // Example insertion method in your activity or repository
+    private static final int PICK_PDF_REQUEST_CODE = 1;
+
+    private String pickPdfFile() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/pdf");
+
+        startActivityForResult(intent, PICK_PDF_REQUEST_CODE);
+
+        return selectedPdfFilePath;
+    }
+
+
+
+    private String getFilePathFromUri(Uri uri) {
+        String filePath = null;
+        String[] projection = {MediaStore.Images.Media.DATA};
+
+        try (Cursor cursor = getContentResolver().query(uri, projection, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                filePath = cursor.getString(columnIndex);
+            }
+        } catch (Exception e) {
+            // Handle exceptions, if any
+            e.printStackTrace();
+        }
+
+        if (filePath == null) {
+            // If the file path is still null, try an alternative approach for API 19 and above
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                try {
+                    ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
+                    if (parcelFileDescriptor != null) {
+                        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+                        FileInputStream fileInputStream = new FileInputStream(fileDescriptor);
+                        FileDescriptor fd = fileInputStream.getFD();
+                        filePath = fd.toString();
+                        fileInputStream.close();
+                        parcelFileDescriptor.close();
+                    }
+                } catch (IOException e) {
+                    // Handle exceptions, if any
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return filePath;
+    }
+
+
+
+//  to insert new pdf file
+    private void insertPdfFile(String pdfFilePath) {
+        // Check if the selected file is a PDF
+        if (!isPdfFile(pdfFilePath)) {
+            // Handle the case where the selected file is not a PDF
+            Toast.makeText(this, "Only PDF files are allowed", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Create a FileEntity object and set its properties
+        FileEntity fileEntity = new FileEntity();
+        fileEntity.setFileName(getFileNameFromPath(pdfFilePath));
+        fileEntity.setFilePath(pdfFilePath);
+        fileEntity.setFileType("pdf"); // You can set a specific type if needed
+
+        // Use AsyncTask to insert into the database in the background
+        new InsertPdfFileTask().execute((Runnable) fileEntity);
+    }
+
+//    inserting pdf on the background thread
+    private class InsertPdfFileTask extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... params) {
+            String pdfFilePath = params[0];
+
+            // Access the Room database and perform the insertion
+            FileEntity fileEntity = new FileEntity();
+            fileEntity.setFileName(getFileNameFromPath(pdfFilePath));
+            fileEntity.setFilePath(pdfFilePath);
+            fileEntity.setFileType("pdf"); // You can set a specific type if needed
+
+            appDatabase.fileDao().insertFile(fileEntity);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            // This method runs on the main/UI thread, you can display Toast messages here
+            Toast.makeText(getApplicationContext(), "PDF file inserted successfully", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+
+//to validate the file extention
+    private boolean isPdfFile(String filePath) {
+        String fileType = getFileExtension(getFileNameFromPath(filePath));
+        return "pdf".equalsIgnoreCase(fileType);
+    }
+
+//  to get the file path
+    private String getFileNameFromPath(String filePath) {
+        File file = new File(filePath);
+        return file.getName();
+    }
+
+//    to get the extension of a file(eg. .pdf)
+    private String getFileExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex == -1) {
+            return "";  // No file extension found
+        }
+        return fileName.substring(dotIndex + 1).toLowerCase();
+    }
+
+    //create new passsword when the user has current password
+    private void showCreatePasswordUI() {
+        PasswordFragment passwordFragment = new PasswordFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.password_popup_container, passwordFragment)
+                .addToBackStack(null)
+                .commit();
+
+        // Set the visibility of the container to visible
+        View passwordContainer = findViewById(R.id.password_popup_container);
+        if (passwordContainer != null) {
+            passwordContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    //show dialog to delete note
     private void showDeleteNoteDialog() {
         if (dialogDeleteNote == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(createNote.this);
@@ -411,6 +629,7 @@ public class createNote extends AppCompatActivity {
         }
     }
 
+//    permission for reading images
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -428,6 +647,30 @@ public class createNote extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        //for selecting pdf
+        if (requestCode == PICK_PDF_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            Uri pdfUri = data.getData();
+            if (pdfUri != null) {
+                selectedPdfFilePath = getFilePathFromUri(pdfUri);
+
+                // Log the selected PDF file path for debugging
+                Log.d("PDF_PATH", "Selected PDF file path: " + selectedPdfFilePath);
+
+                // Check if selectedPdfFilePath is not null before inserting into the database
+                if (selectedPdfFilePath != null) {
+                    // Use AsyncTask to insert into the database in the background
+                    new InsertPdfFileTask().execute(selectedPdfFilePath);
+
+                } else {
+                    Log.e("PDF_PATH", "Error: selectedPdfFilePath is null");
+                }
+            } else {
+                Log.e("PDF_PATH", "Error: pdfUri is null");
+            }
+        } else {
+            Log.e("PDF_PATH", "Error: requestCode or resultCode doesn't match");
+        }
 
         if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK) {
             if (data != null) {
@@ -521,4 +764,9 @@ public class createNote extends AppCompatActivity {
             finish();
         }
     }
+
+
+
+
+
 }
