@@ -35,7 +35,7 @@ import java.util.List;
  * Use the {@link LockedFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LockedFragment extends Fragment{
+public class LockedFragment extends Fragment implements LockedNotesAdapter.OnLockedNoteClickListener{
 // Has been removed the implements LockedNotesAdapter.OnLockedNoteClickListener above this line
     private RecyclerView lockedNotesRecyclerView;
 
@@ -157,25 +157,25 @@ public class LockedFragment extends Fragment{
 
     //when the locked note is clicked.
     private static final int REQUEST_CODE_UPDATE_LOCKED_NOTE = 1; // You can use any integer value
-//    @Override
-//    public void onLockedNoteClicked(LockedNote lockedNote, int position) {
-//        Log.d("Click", "Locked note clicked: " + lockedNote.getTitle());
-//        Intent intent = new Intent(requireContext(), OpenedLockedNoteActivity.class);
-//        intent.putExtra("lockedNote", lockedNote);
-//        startActivityForResult(intent, REQUEST_CODE_UPDATE_LOCKED_NOTE);
-//    }
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_CODE_UPDATE_LOCKED_NOTE && resultCode == Activity.RESULT_OK) {
-            // Handle any logic you need after the OpenedLockedNoteActivity finishes
-            // In your case, you might want to check for password-related changes or updates.
-            // For example, you can reload locked notes or perform other actions.
-            loadLockedNotes();
-        }
+    public void onLockedNoteClicked(LockedNote lockedNote, int position) {
+        Log.d("Click", "Locked note clicked: " + lockedNote.getTitle());
+        Intent intent = new Intent(requireContext(), OpenedLockedNoteActivity.class);
+        intent.putExtra("lockedNote", lockedNote);
+        startActivityForResult(intent, REQUEST_CODE_UPDATE_LOCKED_NOTE);
     }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == REQUEST_CODE_UPDATE_LOCKED_NOTE && resultCode == Activity.RESULT_OK) {
+//            // Handle any logic you need after the OpenedLockedNoteActivity finishes
+//            // In your case, you might want to check for password-related changes or updates.
+//            // For example, you can reload locked notes or perform other actions.
+//            loadLockedNotes();
+//        }
+//    }
 
 
 
