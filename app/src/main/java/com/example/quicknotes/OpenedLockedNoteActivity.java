@@ -129,9 +129,6 @@ public class OpenedLockedNoteActivity extends AppCompatActivity{
         Toast.makeText(this, "ShowEnterPasswordUI", Toast.LENGTH_SHORT).show();
         EnterPasswordDialogFragment2 dialogFragment = new EnterPasswordDialogFragment2(savedPassword);
         dialogFragment.show(getSupportFragmentManager(), "EnterPasswordDialogFragment2");
-
-        // Set the result as OK
-        setResult(Activity.RESULT_OK);
     }
 
 
