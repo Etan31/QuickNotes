@@ -104,13 +104,20 @@ public class EnterPasswordDialogFragment2 extends DialogFragment {
 
 
     private void showCreatePasswordUI() {
+        View passwordPopupContainer = requireActivity().findViewById(R.id.password_popup_container);
+        Log.d("click", "enterpassword:108");
+        if (passwordPopupContainer != null) {
+            passwordPopupContainer.setVisibility(View.VISIBLE);
+            Log.d("click", "enterpassword:111");
+        }
+
         PasswordFragment passwordFragment = new PasswordFragment();
-        getParentFragmentManager().beginTransaction()
+        getChildFragmentManager().beginTransaction()
                 .replace(R.id.password_popup_container, passwordFragment)
                 .addToBackStack(null)
                 .commit();
-
     }
+
 
 
 

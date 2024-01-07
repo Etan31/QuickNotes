@@ -2,6 +2,7 @@ package com.example.quicknotes;
 
 import static android.content.Intent.getIntent;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -66,45 +67,43 @@ public class OpenedLockedNoteActivity extends AppCompatActivity{
 //This is the on click method before opening the locked notes
 
 //        -------------------------DO NOT DELETE----------------------------------------------
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("lockedNote")) {
-            // Retrieve the LockedNote object from the Intent
-            LockedNote lockedNote = intent.getParcelableExtra("lockedNote");
-
-            // Display the details of the locked note
-            displayLockedNoteDetails(lockedNote);
-
-        }//
+//        Intent intent = getIntent();
+//        if (intent != null && intent.hasExtra("lockedNote")) {
+//            LockedNote lockedNote = intent.getParcelableExtra("lockedNote");
+//            displayLockedNoteDetails(lockedNote);
+//
+//        }
 
 
 
-//        PasswordViewModel passwordViewModel = new ViewModelProvider(this).get(PasswordViewModel.class);
-//        passwordViewModel.getPasswordLiveData().observe(this, savedPassword -> {
-//            if (savedPassword != null) {
-//                showEnterPasswordUI(savedPassword); // Use the method to show password UI
-//                Toast.makeText(this, "This password", Toast.LENGTH_SHORT).show();
-////                    displayLockedNoteDetails(lockedNote);
-//                Intent intent = getIntent();
-//                if (intent != null && intent.hasExtra("lockedNote")) {
-//                    // Retrieve the LockedNote object from the Intent
-//                    LockedNote lockedNote = intent.getParcelableExtra("lockedNote");
+        PasswordViewModel passwordViewModel = new ViewModelProvider(this).get(PasswordViewModel.class);
+        passwordViewModel.getPasswordLiveData().observe(this, savedPassword -> {
+            Log.d("Click", "openLockeNote:81");
+            if (savedPassword != null) {
+                showEnterPasswordUI(savedPassword); // Use the method to show password UI
+                Toast.makeText(this, "This password", Toast.LENGTH_SHORT).show();
+                Log.d("Click", "openLockeNote:85");
+
 //                    displayLockedNoteDetails(lockedNote);
-//                    Toast.makeText(this, "Intent password", Toast.LENGTH_SHORT).show();
-//
-//                }else{
-//                    Toast.makeText(this, "Else password", Toast.LENGTH_SHORT).show();
-//                }
-//
-//            } else {
-//                // Display locked note details if no password is set
-//                Toast.makeText(this, "No password", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+                Intent intent = getIntent();
+                if (intent != null && intent.hasExtra("lockedNote")) {
+                    Log.d("Click", "openLockeNote:80");
 
+                    // Retrieve the LockedNote object from the Intent
+                    LockedNote lockedNote = intent.getParcelableExtra("lockedNote");
+                    displayLockedNoteDetails(lockedNote);
+                    Toast.makeText(this, "Intent password", Toast.LENGTH_SHORT).show();
 
+                }else{
+                    Log.d("Click", "openLockeNote98");
+                    Toast.makeText(this, "Else password", Toast.LENGTH_SHORT).show();
+                }
 
-
-
+            } else {
+                // Display locked note details if no password is set
+                Toast.makeText(this, "No password", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 //        PasswordViewModel passwordViewModel = new ViewModelProvider(this).get(PasswordViewModel.class);
 //        passwordViewModel.getPasswordLiveData().observe(getViewLifecycleOwner(), savedPassword -> {
@@ -131,7 +130,10 @@ public class OpenedLockedNoteActivity extends AppCompatActivity{
         EnterPasswordDialogFragment2 dialogFragment = new EnterPasswordDialogFragment2(savedPassword);
         dialogFragment.show(getSupportFragmentManager(), "EnterPasswordDialogFragment2");
 
+        // Set the result as OK
+        setResult(Activity.RESULT_OK);
     }
+
 
 
 
