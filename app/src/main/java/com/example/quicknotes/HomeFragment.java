@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -19,11 +20,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.example.quicknotes.R;
 import com.example.quicknotes.adapters.NotesAdapter;
 import com.example.quicknotes.database.NotesDatabase;
 import com.example.quicknotes.entities.Note;
 import com.example.quicknotes.listeners.NotesListener;
+import com.example.quicknotes.password.PasswordEntity;
+import com.example.quicknotes.viewmodel.PasswordViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +95,7 @@ public class HomeFragment extends Fragment implements NotesListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-// Find the ImageView in your fragment layout
+        // Find the ImageView in your fragment layout
         ImageView addNoteButton = view.findViewById(R.id.fab);
 
         // Set click listener to handle the button click
@@ -137,6 +142,8 @@ public class HomeFragment extends Fragment implements NotesListener {
 
         return view;
     }
+
+
 
     //on clicking the note displayed on the home fragment.
     @Override

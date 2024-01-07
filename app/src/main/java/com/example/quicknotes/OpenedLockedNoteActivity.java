@@ -5,18 +5,29 @@ import static android.content.Intent.getIntent;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.quicknotes.locked_notes.LockedNote;
+import com.example.quicknotes.password.PasswordEntity;
+import com.example.quicknotes.viewmodel.PasswordViewModel;
 
 public class OpenedLockedNoteActivity extends AppCompatActivity{
+
+    //TODO: FIND WHERE IS THE ON CLICK
+    // then add a method for the onclick showEnterPasswordUI()
     private TextView inputNoteTitle;
     private TextView inputNoteSubtitle;
     private TextView inputNote;
@@ -52,25 +63,81 @@ public class OpenedLockedNoteActivity extends AppCompatActivity{
         textWebURL = findViewById(R.id.textWebURL);
         imageRemoveWebURL = findViewById(R.id.imageRemoveWebURL);
 
+//This is the on click method before opening the locked notes
+
+//        -------------------------DO NOT DELETE----------------------------------------------
         Intent intent = getIntent();
-//        if (intent != null && intent.hasExtra("isViewOrUpdate") && intent.getBooleanExtra("isViewOrUpdate", false)) {
-//            LockedNote lockedNote = intent.getParcelableExtra("lockedNote");
-//            if (lockedNote != null) {
-//                displayLockedNoteDetails(lockedNote);
-//            }
-//        }
         if (intent != null && intent.hasExtra("lockedNote")) {
             // Retrieve the LockedNote object from the Intent
             LockedNote lockedNote = intent.getParcelableExtra("lockedNote");
 
             // Display the details of the locked note
             displayLockedNoteDetails(lockedNote);
-        }
+
+        }//
+
+
+
+//        PasswordViewModel passwordViewModel = new ViewModelProvider(this).get(PasswordViewModel.class);
+//        passwordViewModel.getPasswordLiveData().observe(this, savedPassword -> {
+//            if (savedPassword != null) {
+//                showEnterPasswordUI(savedPassword); // Use the method to show password UI
+//                Toast.makeText(this, "This password", Toast.LENGTH_SHORT).show();
+////                    displayLockedNoteDetails(lockedNote);
+//                Intent intent = getIntent();
+//                if (intent != null && intent.hasExtra("lockedNote")) {
+//                    // Retrieve the LockedNote object from the Intent
+//                    LockedNote lockedNote = intent.getParcelableExtra("lockedNote");
+//                    displayLockedNoteDetails(lockedNote);
+//                    Toast.makeText(this, "Intent password", Toast.LENGTH_SHORT).show();
+//
+//                }else{
+//                    Toast.makeText(this, "Else password", Toast.LENGTH_SHORT).show();
+//                }
+//
+//            } else {
+//                // Display locked note details if no password is set
+//                Toast.makeText(this, "No password", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+
+
+
+
+
+//        PasswordViewModel passwordViewModel = new ViewModelProvider(this).get(PasswordViewModel.class);
+//        passwordViewModel.getPasswordLiveData().observe(getViewLifecycleOwner(), savedPassword -> {
+//            if (savedPassword != null) {
+//
+//                changeResetPasswordButton.setOnClickListener(v -> {
+//                    showEnterPasswordUI(savedPassword);
+//                });
+//
+//            } else {
+//
+//                changeResetPasswordButton.setOnClickListener(v -> {
+//                    showCreatePasswordUI();
+//                });
+//
+//            }
+//        });
+
+
+    }
+
+    private void showEnterPasswordUI(PasswordEntity savedPassword) {
+        Toast.makeText(this, "ShowEnterPasswordUI", Toast.LENGTH_SHORT).show();
+        EnterPasswordDialogFragment2 dialogFragment = new EnterPasswordDialogFragment2(savedPassword);
+        dialogFragment.show(getSupportFragmentManager(), "EnterPasswordDialogFragment2");
+
     }
 
 
 
     private void displayLockedNoteDetails(LockedNote lockedNote) {
+        Log.d("Click", "displayLockedNoteDetails");
+
         // Set the text of your EditText views with the details of the locked note
         inputNoteTitle.setText(lockedNote.getTitle());
         inputNoteSubtitle.setText(lockedNote.getSubtitle());
@@ -85,15 +152,6 @@ public class OpenedLockedNoteActivity extends AppCompatActivity{
             imageNote.setVisibility(View.GONE);
         }
 
-//        // Check for image and display if available
-//        if (lockedNote.getImagePath() != null && !lockedNote.getImagePath().trim().isEmpty()) {
-//            imageNote.setImageBitmap(BitmapFactory.decodeFile(lockedNote.getImagePath()));
-//            imageNote.setVisibility(View.VISIBLE);
-//            imageRemoveImage.setVisibility(View.VISIBLE);
-//        } else {
-//            imageNote.setVisibility(View.GONE);
-//            imageRemoveImage.setVisibility(View.GONE);
-//        }
 
         // Check for web link and display if available
         if (lockedNote.getWebLink() != null && !lockedNote.getWebLink().trim().isEmpty()) {

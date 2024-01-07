@@ -1,10 +1,13 @@
 package com.example.quicknotes;
 
+import static com.example.quicknotes.HomeFragment.REQUEST_CODE_ADD_NOTE;
+
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +21,8 @@ import android.widget.Toast;
 import com.example.quicknotes.database.LockedNotesDatabase;
 import com.example.quicknotes.locked_notes.LockedNote;
 import com.example.quicknotes.locked_notes.LockedNotesAdapter;
+import com.example.quicknotes.password.PasswordEntity;
+import com.example.quicknotes.viewmodel.PasswordViewModel;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -33,12 +38,12 @@ public class LockedFragment extends Fragment implements LockedNotesAdapter.OnLoc
 
     private LockedNotesAdapter lockedNotesAdapter;
 
-    // TODO: Rename parameter arguments, choose names that match
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
+
     private String mParam1;
     private String mParam2;
 
@@ -54,7 +59,7 @@ public class LockedFragment extends Fragment implements LockedNotesAdapter.OnLoc
      * @param param2 Parameter 2.
      * @return A new instance of fragment LockedFragment.
      */
-    // TODO: Rename and change types and number of parameters
+
     public static LockedFragment newInstance(String param1, String param2) {
         LockedFragment fragment = new LockedFragment();
         Bundle args = new Bundle();
@@ -95,12 +100,15 @@ public class LockedFragment extends Fragment implements LockedNotesAdapter.OnLoc
         // Load locked notes from the database and update the adapter
         loadLockedNotes();
 
+
+
+
         return view;
     }
 
 
 
-
+//click function before entering locked notes on the side menu button
     private void loadLockedNotes() {
         new LoadLockedNotesTask(this).execute();
     }
@@ -108,6 +116,8 @@ public class LockedFragment extends Fragment implements LockedNotesAdapter.OnLoc
     private void onLockedNotesLoaded(List<LockedNote> lockedNotes) {
         if (lockedNotes != null) {
             lockedNotesAdapter.setLockedNotes(lockedNotes);
+//            Log.d("Click", "lockedFragment:134");
+
         }
     }
 
@@ -132,6 +142,7 @@ public class LockedFragment extends Fragment implements LockedNotesAdapter.OnLoc
         }
 
 //      Then display the selected Query
+//      This is when you click the side menu, locked notes
         @Override
         protected void onPostExecute(List<LockedNote> lockedNotes) {
             LockedFragment fragment = fragmentReference.get();
