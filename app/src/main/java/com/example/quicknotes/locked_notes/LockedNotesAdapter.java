@@ -1,30 +1,19 @@
 package com.example.quicknotes.locked_notes;
 
-import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.quicknotes.EnterPasswordDialogFragment;
-import com.example.quicknotes.EnterPasswordDialogFragment2;
 import com.example.quicknotes.OpenedLockedNoteActivity;
 import com.example.quicknotes.R;
-import com.example.quicknotes.password.PasswordEntity;
-import com.example.quicknotes.viewmodel.PasswordViewModel;
 
 import java.util.List;
 
